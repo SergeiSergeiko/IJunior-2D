@@ -41,12 +41,9 @@ public class Door : MonoBehaviour
         if (_inHouse)
         {
             _audioSource.Play();
-            StartCoroutine(FadeInVolumeSignaling());
         }
-        else
-        {            
-            StartCoroutine(FadeInVolumeSignaling());
-        }
+
+        StartCoroutine(FadeInVolumeSignaling());
     }
 
     private IEnumerator FadeInVolumeSignaling()
@@ -54,27 +51,28 @@ public class Door : MonoBehaviour
         float _minVolume = 0f;
         float _maxVolume = 1.0f;
 
-        if (_inHouse)
+        while (true)
         {
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _maxVolume, _recoveryRate * Time.deltaTime);
-            if (_audioSource.volume == 1.0f || _inHouse == false)
+            if (_inHouse)
             {
-                yield break;
+                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _maxVolume, _recoveryRate * Time.deltaTime);
+                if (_audioSource.volume == 1.0f || _inHouse == false)
+                {
+                    yield break;
+                }
             }
-            Debug.Log("Volum + 1");
-        }
-        else
-        {
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _minVolume, _recoveryRate * Time.deltaTime);
-            if (_audioSource.volume == 0f || _inHouse == true)
+            else
             {
-                _audioSource.Stop();
+                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _minVolume, _recoveryRate * Time.deltaTime);
+                if (_audioSource.volume == 0f || _inHouse == true)
+                {
+                    _audioSource.Stop();
 
-                yield break;
+                    yield break;
+                }
             }
-            Debug.Log("Volum - 2");
-        }
 
-        yield return null;
+            yield return null;
+        }
     }
 }
