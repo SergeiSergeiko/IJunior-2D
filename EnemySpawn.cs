@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Charakted;
 using Enemies;
@@ -12,6 +10,7 @@ namespace SpawnManager
         [SerializeField] private Acorn _enemy;
         [SerializeField] private Player _player;
         [SerializeField] private Transform[] spawnPointsEnemies;
+        [SerializeField] private int _maxEnemiesInScene = 3;
 
         private int _countEnemiesInScene = 0;
 
@@ -34,7 +33,7 @@ namespace SpawnManager
         {
             var count = 0;
             var waitForSeconds = new WaitForSeconds(2);
-            var waitUntil = new WaitUntil(() => _countEnemiesInScene < 3);
+            var waitUntil = new WaitUntil(() => _countEnemiesInScene < _maxEnemiesInScene);
 
             while (true)
             {
@@ -47,7 +46,7 @@ namespace SpawnManager
 
                 count++;
 
-                if (count > 2)
+                if (count >= _maxEnemiesInScene)
                 {
                     count = 0;
                 }
