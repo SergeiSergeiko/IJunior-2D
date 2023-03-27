@@ -1,78 +1,70 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+using Charakted;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] private AudioSource _audioSource;
     [SerializeField] private float _recoveryRate;
 
-    private Player _player;
+    private AudioSource _audioSource;
     private bool _inHouse = false;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
         if (_inHouse && Input.GetKeyDown("r"))
         {
-            HouseController();
+            _inHouse = !_inHouse;
+
+            TriggerSignaling();
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (Input.GetKey("e") && collision.TryGetComponent<Player>(out Player player))
+        if (Input.GetKey("e") && collision.TryGetComponent(out Player player))
         {
-            _player = player;
+            _inHouse = !_inHouse;
 
-            HouseController();
+            TriggerSignaling();
         }
     }
 
-    private void HouseController()
+    private void TriggerSignaling()
     {
-        _inHouse = !_inHouse;
-        _player.gameObject.SetActive(!_player.gameObject.activeSelf);
+        float maxVolume = 1f;
+        float minVolume = 0f;
 
-        PlaySignaling();
-    }
-
-    private void PlaySignaling()
-    {
         if (_inHouse)
         {
-            _audioSource.Play();
-        }
+            if (!_audioSource.isPlaying)
+            {
+                _audioSource.Play();
+            }
 
-        StartCoroutine(FadeInVolumeSignaling());
+            StartCoroutine(FadeInVolumeSignaling(maxVolume));
+        }
+        else
+        {
+            StartCoroutine(FadeInVolumeSignaling(minVolume));
+        }
     }
 
-    private IEnumerator FadeInVolumeSignaling()
-    {
-        float _minVolume = 0f;
-        float _maxVolume = 1.0f;
-
-        while (true)
+    private IEnumerator FadeInVolumeSignaling(float currentVolume)
+    {        
+        while (_audioSource.volume != currentVolume)
         {
-            if (_inHouse)
-            {
-                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _maxVolume, _recoveryRate * Time.deltaTime);
-                if (_audioSource.volume == 1.0f || _inHouse == false)
-                {
-                    yield break;
-                }
-            }
-            else
-            {
-                _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _minVolume, _recoveryRate * Time.deltaTime);
-                if (_audioSource.volume == 0f || _inHouse == true)
-                {
-                    _audioSource.Stop();
-
-                    yield break;
-                }
-            }
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, currentVolume, _recoveryRate * Time.deltaTime);
 
             yield return null;
+        }
+        if (!_inHouse && _audioSource.volume == 0f)
+        {
+            _audioSource.Stop();
         }
     }
 }
