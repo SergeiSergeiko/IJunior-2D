@@ -1,81 +1,39 @@
 using System.Collections;
 using UnityEngine;
+using Charakted;
+using UnityEngine.Events;
 
-public class Door : MonoBehaviour
+namespace House
 {
-    [SerializeField] private float _recoveryRate;
-    
-    private AudioSource _audioSource;
-    private Player _player;
-    private bool _inHouse = false;
-
-    private void Awake()
+    public class Door : MonoBehaviour
     {
-        _audioSource = GetComponent<AudioSource>();
-    }
+        private UnityEvent<bool> _reached = new();
+        private Signaling _signaling;
+        private bool _inHouse = false;
 
-    private void Update()
-    {
-        if (_inHouse && Input.GetKeyDown("r"))
+        private void Start()
         {
-            HouseController();
-        }
-    }
+            _signaling = GetComponent<Signaling>();
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (Input.GetKey("e") && collision.TryGetComponent(out Player player))
-        {
-            _player = player;
-
-            HouseController();
-        }
-    }
-
-    private void HouseController()
-    {
-        _inHouse = !_inHouse;
-        _player.gameObject.SetActive(!_player.gameObject.activeSelf);
-
-        TriggerSignaling();
-    }
-
-    private void TriggerSignaling()
-    {
-        float maxVolume = 1f;
-        float minVolume = 0f;
-
-        if (_inHouse)
-        {
-            PlaySignaling(maxVolume);
-        }
-        else
-        {
-            PlaySignaling(minVolume);
-        }
-    }
-
-    private void PlaySignaling(float currentVolume)
-    {
-        if (!_audioSource.isPlaying)
-        {
-            _audioSource.Play();
+            _reached.AddListener(_signaling.TriggerSignaling);
         }
 
-        StartCoroutine(FadeInVolumeSignaling(currentVolume));
-    }
-
-    private IEnumerator FadeInVolumeSignaling(float currentVolume)
-    {        
-        while (_audioSource.volume != currentVolume)
+        private void Update()
         {
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, currentVolume, _recoveryRate * Time.deltaTime);
+            if (_inHouse && Input.GetKey(KeyCode.R))
+            {
+                _inHouse = !_inHouse;
+                _reached.Invoke(_inHouse);
+            }
+        }
 
-            yield return null;
-        }
-        if (!_inHouse && _audioSource.volume == 0f)
+        private void OnTriggerStay2D(Collider2D collision)
         {
-            _audioSource.Stop();
-        }
+            if (Input.GetKey(KeyCode.E) && collision.TryGetComponent(out Player player))
+            {
+                _inHouse = !_inHouse;
+                _reached.Invoke(_inHouse);
+            }
+        }        
     }
 }

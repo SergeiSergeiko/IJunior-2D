@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
+using Enemies;
+using Charakted;
+using UnityEngine.Events;
+using SpawnManager;
 
-namespace Enemys
+namespace Enemies
 {
-    public class Acorn : MonoBehaviour
+    public class Acorn : Enemy
     {
-        [SerializeField] private float _speed;
-
+        private Player _player;
         private bool inCollision = false;
 
         private CharState State
@@ -47,36 +44,26 @@ namespace Enemys
 
                 _rigidbody.constraints = RigidbodyConstraints2D.FreezePosition;
                 _rigidbody.freezeRotation = true;
-                
+
                 State = CharState.Explosion;
             }
         }
 
-        private void LookFor()
-        {
-            Destroy(gameObject);
-        }
-
         private void ChaseUser()
         {
-            var _user = FindPlayerInScene();
+            var direction = transform.position.x - _player.transform.position.x;
 
-            var direction = transform.position.x - _user.transform.position.x;
-
-            transform.position = Vector3.MoveTowards(transform.position, _user.transform.position, _speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _speed * Time.deltaTime);
 
             _sprite.flipX = direction < 0.0f;
 
             State = CharState.Step;
         }
 
-        private GameObject FindPlayerInScene() => GameObject.Find("Player");
-    }
-
-    public enum CharState
-    {
-        Idle,
-        Step,
-        Explosion
+        public void Init(Player player)
+        {
+            _player = player;
+        }
     }
 }
+

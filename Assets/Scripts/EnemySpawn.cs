@@ -1,48 +1,40 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+using Charakted;
+using Enemies;
 
-public class EnemySpawn : MonoBehaviour
+namespace SpawnManager
 {
-    [SerializeField] private GameObject _enemy;
-
-    private GameObject[] _enemysInScene;
-
-    private Vector3[] spawnPoints = new[] {
-        new Vector3(14f, -2.5f, 0f),
-        new Vector3(-11f, -1.5f, 0f),
-        new Vector3(8f, -2.5f, 0f) };
-
-    private void Start()
+    public class EnemySpawn : MonoBehaviour
     {
-        StartCoroutine(SpawnEnemys());
-    }
+        [SerializeField] private Acorn _enemy;
+        [SerializeField] private Player _player;
 
-    private void Update()
-    {
-        FindEnemys();
-    }
+        private SpawnPoint[] _spawnPointsEnemies;
 
-    private void FindEnemys()
-    {
-        _enemysInScene = GameObject.FindGameObjectsWithTag("EnemyAcorn");
-    }
-
-    private IEnumerator SpawnEnemys()
-    {
-        var waitForSeconds = new WaitForSeconds(2);
-        var waitUntil = new WaitUntil(() => _enemysInScene.Length < 3);
-
-        for (int i = 0; true; i++)
+        private void Start()
         {
-            Instantiate(_enemy, spawnPoints[i], Quaternion.identity);
+            _spawnPointsEnemies = GetComponentsInChildren<SpawnPoint>();
 
-            yield return waitForSeconds;
-            yield return waitUntil;
+            StartCoroutine(SpawnEnemies());
+        }
 
-            if (i >= 2)
+        private IEnumerator SpawnEnemies()
+        {
+            var count = 0;
+            var waitForSeconds = new WaitForSeconds(2);
+
+            while (true)
             {
-                i = 0;
+                _spawnPointsEnemies[count].Spawn(_enemy, _player);
+
+                yield return waitForSeconds;
+
+                count++;
+                if (count >= _spawnPointsEnemies.Length)
+                {
+                    count = 0;
+                }
             }
         }
     }
