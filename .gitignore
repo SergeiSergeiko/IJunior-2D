@@ -1,0 +1,14 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/Library
+/Logs
+/Recordings
+/Temp
+/obj/Debug
+/.vs
+/UserSettings
+/IJunior 2D.sln
+/Class1.cs
+/Assembly-CSharp.csproj
