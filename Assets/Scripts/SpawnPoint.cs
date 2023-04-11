@@ -16,9 +16,9 @@ namespace SpawnManager
             {
                 _enemy = Instantiate(enemy, transform.position, Quaternion.identity);
 
-                if (_enemy is Acorn)
+                if (_enemy is Acorn acorn)
                 {
-                    Acorn acorn = (Acorn)_enemy;
+                    acorn = (Acorn)_enemy;
                     acorn.Init(player);
                 }
                 _enemy.Died += OnDied;
