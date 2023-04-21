@@ -10,11 +10,11 @@ namespace SpawnManager
         [SerializeField] private Acorn _enemy;
         [SerializeField] private Player _player;
 
-        private SpawnPoint[] _spawnPointsEnemies;
+        private SpawnPointEnemies[] _spawnPointsEnemies;
 
         private void Start()
         {
-            _spawnPointsEnemies = GetComponentsInChildren<SpawnPoint>();
+            _spawnPointsEnemies = GetComponentsInChildren<SpawnPointEnemies>();
 
             StartCoroutine(SpawnEnemies());
         }

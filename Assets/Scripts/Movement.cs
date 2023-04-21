@@ -4,9 +4,10 @@ namespace Charakted
 {
     public class Movement : Player
     {
+        [SerializeField] private Shuriken _shuriken;
         [SerializeField] private float _speed;
         [SerializeField] private float _jumpPower;
-
+        
         private bool isGrounded = false;
 
         private CharState State
@@ -48,7 +49,7 @@ namespace Charakted
             }
             if (Input.GetButton("Fire1"))
             {
-                Hit();
+                Shoot();
             }
             if (Input.GetButton("Fire2"))
             {
@@ -89,9 +90,18 @@ namespace Charakted
             _rigidbody.AddForce(transform.up * _jumpPower, ForceMode2D.Impulse);
         }
 
-        private void Hit()
+        private void Shoot()
         {
-            State = CharState.Hit;
+            State = CharState.Shoot;
+        }
+
+        private void LookForShoot()
+        {
+            Vector3 position = transform.position;
+            position.y += 0.1f;
+
+            Shuriken newShuriken = Instantiate(_shuriken, position, _shuriken.transform.rotation);
+            newShuriken.Direction = newShuriken.transform.right * (_sprite.flipX ? 1.0f : -1.0f);
         }
 
         private void CheckGround()

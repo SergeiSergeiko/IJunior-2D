@@ -1,8 +1,6 @@
-using System.Collections;
 using UnityEngine;
 using Charakted;
 using UnityEngine.Events;
-using System;
 
 namespace House
 {
@@ -35,7 +33,6 @@ namespace House
             if (Input.GetKey(KeyCode.E) && collision.TryGetComponent(out Player player))
             {
                 _inHouse = true;
-                player.ChangeActivePlayer();
                 _reachedHouse.Invoke(_inHouse);
             }
         }

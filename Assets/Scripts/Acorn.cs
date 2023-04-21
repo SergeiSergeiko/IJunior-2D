@@ -52,7 +52,7 @@ namespace Enemies
         private void ChaseUser()
         {
             var direction = transform.position.x - _player.transform.position.x;
-
+            
             transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _speed * Time.deltaTime);
 
             _sprite.flipX = direction < 0.0f;

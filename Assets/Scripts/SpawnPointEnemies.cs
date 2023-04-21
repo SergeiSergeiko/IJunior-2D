@@ -6,7 +6,7 @@ using Charakted;
 
 namespace SpawnManager 
 {
-    public class SpawnPoint : MonoBehaviour
+    public class SpawnPointEnemies : MonoBehaviour
     {        
         private Enemy _enemy;
 
@@ -18,7 +18,6 @@ namespace SpawnManager
 
                 if (_enemy is Acorn acorn)
                 {
-                    acorn = (Acorn)_enemy;
                     acorn.Init(player);
                 }
                 _enemy.Died += OnDied;
