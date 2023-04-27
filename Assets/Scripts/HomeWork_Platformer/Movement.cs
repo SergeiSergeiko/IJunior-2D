@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Charakted
 {
-    public class Movement : Player
+    public class Movement : MonoBehaviour
     {
         [SerializeField] private Shuriken _shuriken;
         [SerializeField] private float _speed;

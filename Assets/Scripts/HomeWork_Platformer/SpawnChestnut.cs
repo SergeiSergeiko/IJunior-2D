@@ -9,13 +9,22 @@ public class SpawnChestnut : MonoBehaviour
 
     private SpawnPointChestnut[] _spawnPointsChestnut;
 
+    private void Awake()
+    {
+        _spawnPointsChestnut = new SpawnPointChestnut[transform.childCount];
+        _spawnPointsChestnut = GetComponentsInChildren<SpawnPointChestnut>();
+    }
+
     private void Start()
     {
-        _spawnPointsChestnut = GetComponentsInChildren<SpawnPointChestnut>();
-
         foreach (var SpawnPoint in _spawnPointsChestnut)
         {
-            SpawnPoint.SpawnChestnut(_chestnut);
+            ÑreateChestnut(SpawnPoint.transform);
         }
+    }
+
+    public void ÑreateChestnut(Transform Transform)
+    {
+        Instantiate(_chestnut, Transform.position, Quaternion.identity);
     }
 }

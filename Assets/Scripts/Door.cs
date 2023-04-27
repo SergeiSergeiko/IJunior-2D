@@ -6,6 +6,8 @@ namespace House
 {
     public class Door : MonoBehaviour
     {
+        [SerializeField] private Player _player;
+
         private UnityEvent<bool> _reachedHouse = new();
         private Signaling _signaling;
         private bool _inHouse = false;
@@ -21,7 +23,7 @@ namespace House
         {
             if (_inHouse && Input.GetKey(KeyCode.R))
             {
-                SetActivePlayer();
+                SetActivePlayer(true);
 
                 _inHouse = false;
                 _reachedHouse.Invoke(_inHouse);
@@ -33,14 +35,14 @@ namespace House
             if (Input.GetKey(KeyCode.E) && collision.TryGetComponent(out Player player))
             {
                 _inHouse = true;
+                SetActivePlayer(false);
                 _reachedHouse.Invoke(_inHouse);
             }
         }
 
-        private void SetActivePlayer()
+        private void SetActivePlayer(bool Active)
         {
-            var player = GameObject.Find("Charakted");
-            player.transform.Find("Player").gameObject.SetActive(true);
+            _player.gameObject.SetActive(Active);
         }
     }
 }

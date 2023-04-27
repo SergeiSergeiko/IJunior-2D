@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class HealthBar : MonoBehaviour
 {
-    private Transform[] _hearts = new Transform[5];
-    private Player _player;
+    [SerializeField] private Player _player;
+
+    private Transform[] _hearts;
 
     private void Awake()
     {
-        _player = FindObjectOfType<Player>();
+        _hearts = new Transform[transform.childCount];
 
         for (int i = 0; i < _hearts.Length; i++)
         {
@@ -18,9 +19,9 @@ public class HealthBar : MonoBehaviour
 
     public void Refresh()
     {
-        for (int i = _hearts.Length - 1; i >= 0; i--)
+        for (int i = 0; i < _hearts.Length; i++)
         {
-            if (i > _player.Health)
+            if (i < _player.Health)
             {
                 _hearts[i].gameObject.SetActive(true);
             }
