@@ -6,6 +6,7 @@ using SpawnManager;
 
 namespace Enemies
 {
+    [RequireComponent(typeof(Animator), typeof(Rigidbody2D))]
     public class Acorn : Enemy
     {
         private Player _player;

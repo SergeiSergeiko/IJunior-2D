@@ -6,12 +6,16 @@ namespace Enemies
 {
     public class Chestnut : Enemy
     {
+        private const float _factorForOverlapCircleY = 0.5f;
+        private const float _factorForOverlapCircleX = 0.9f;
+        private const float _radiusForOverlapCircle = 0.1f;
+
         private Vector3 _direction;
-        private SpriteRenderer _sprite;
+        private SpriteRenderer _spriteRenderer;
 
         private void Start()
         {
-            _sprite = GetComponent<SpriteRenderer>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
 
             _direction = transform.right;
         }
@@ -36,13 +40,17 @@ namespace Enemies
 
         private void Move()
         {
-            Collider2D[] collidersFrontOf = Physics2D.OverlapCircleAll(transform.position + transform.up * 0.5f + transform.right * _direction.x * 0.9f, 0.1f);
-            Collider2D[] GroundColliders = Physics2D.OverlapCircleAll(transform.position + transform.up * -0.5f + transform.right * _direction.x * 0.9f, 0.1f);
 
-            if (collidersFrontOf.Length > 0 && collidersFrontOf.All(x => !x.GetComponent<Player>() && !x.GetComponent<Coin>()) || GroundColliders.Length == 0 && GroundColliders.All(x => !x.GetComponent<Player>() && !x.GetComponent<Coin>()))
+            Collider2D[] CollidersFrontOf = Physics2D.OverlapCircleAll(transform.position + transform.up * _factorForOverlapCircleY
+                + transform.right * _direction.x * _factorForOverlapCircleX, _radiusForOverlapCircle);
+            Collider2D[] GroundColliders = Physics2D.OverlapCircleAll(transform.position + transform.up * -_factorForOverlapCircleY
+                + transform.right * _direction.x * _factorForOverlapCircleX, _radiusForOverlapCircle);
+
+            if (CollidersFrontOf.Length > 0 && CollidersFrontOf.All(x => !x.GetComponent<Player>() && !x.GetComponent<Coin>()) 
+               || GroundColliders.Length == 0 && GroundColliders.All(x => !x.GetComponent<Player>() && !x.GetComponent<Coin>()))
             {
                 _direction *= -1.0f;
-                _sprite.flipX = !_sprite.flipX;
+                _spriteRenderer.flipX = !_spriteRenderer.flipX;
             }
 
             transform.position = Vector3.MoveTowards(transform.position, transform.position + _direction, _speed * Time.deltaTime);

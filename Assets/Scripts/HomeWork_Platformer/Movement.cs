@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Charakted
 {
+    [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D), typeof(Animator))]
     public class Movement : MonoBehaviour
     {
         [SerializeField] private Shuriken _shuriken;

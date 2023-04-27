@@ -6,6 +6,7 @@ using DG.Tweening;
 
 namespace Charakted
 {
+    [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
     {
         [SerializeField] private float _knockbackForce;
@@ -18,7 +19,19 @@ namespace Charakted
         private bool _isReceivedDamage = false;
         private int _countCoin;
 
-        public int CountCoin { get { return _countCoin; } set { _countCoin++; } }
+        public int CountCoin 
+        { 
+            get
+            { 
+                return _countCoin;
+            } 
+            set 
+            { 
+                _countCoin++;
+                RefreshScoreText();
+            } 
+        }
+
         public int Health
         {
             get
@@ -42,11 +55,6 @@ namespace Charakted
             _spriteRenderer = GetComponent<SpriteRenderer>();            
         }
 
-        private void Update()
-        {
-            _scoreText.text = _countCoin.ToString();
-        }
-
         public void ReceivedDamage()
         {
             if (!_isReceivedDamage)
@@ -66,6 +74,11 @@ namespace Charakted
                 .From()
                 .SetLoops(5, LoopType.Restart)
                 .OnComplete(() => _isReceivedDamage = false);
+        }
+
+        private void RefreshScoreText()
+        {
+            _scoreText.text = _countCoin.ToString();
         }
     }
 

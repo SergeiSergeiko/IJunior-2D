@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace Enemies
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class Enemy : MonoBehaviour
     {
         [SerializeField] protected float _speed;
