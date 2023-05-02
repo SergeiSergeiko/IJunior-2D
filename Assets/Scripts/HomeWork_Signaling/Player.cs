@@ -9,6 +9,8 @@ namespace Charakted
     [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
     {
+        private const int _maxHealth = 5;
+
         [SerializeField] private float _knockbackForce;
         [SerializeField] private int _health = 5;
         [SerializeField] private Text _scoreText;
@@ -40,7 +42,7 @@ namespace Charakted
             }
             set
             {
-                if (value < 5)
+                if (value < _maxHealth)
                 {
                     _health = value;
                 }
@@ -70,7 +72,10 @@ namespace Charakted
 
         private void ActivateAnimationReceivedDamage()
         {
-            _spriteRenderer.DOFade(0, 0.3f)
+            float EndValue = 0;
+            float Duration = 0.3f;
+
+            _spriteRenderer.DOFade(EndValue, Duration)
                 .From()
                 .SetLoops(5, LoopType.Restart)
                 .OnComplete(() => _isReceivedDamage = false);
