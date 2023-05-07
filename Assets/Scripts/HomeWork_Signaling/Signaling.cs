@@ -9,6 +9,7 @@ namespace House
     {
         [SerializeField] private float _recoveryRate = 2f;
 
+        private Coroutine _volumeSignal;
         private AudioSource _audioSource;
 
         private void Start()
@@ -29,11 +30,11 @@ namespace House
                     _audioSource.Play();
                 }
 
-                StartCoroutine(FadeInVolumeSignaling(maxVolume));
+                StopOldAndStartNewCoroutine(maxVolume);
             }
             else
             {
-                StartCoroutine(FadeInVolumeSignaling(minVolume));
+                StopOldAndStartNewCoroutine(minVolume);
             }
         }
 
@@ -49,6 +50,15 @@ namespace House
             {
                 _audioSource.Stop();
             }
+        }
+
+        private void StopOldAndStartNewCoroutine(float TargetVolume)
+        {
+            if (_volumeSignal != null)
+            {
+                StopCoroutine(_volumeSignal);
+            }
+            StartCoroutine(FadeInVolumeSignaling(TargetVolume));
         }
     }
 }
