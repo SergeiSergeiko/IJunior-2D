@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using House;
 
 namespace Charakted
 {
     [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
     {
-        private const int _maxHealth = 5;
+        private const int _MaxHealth = 5;
 
         [SerializeField] private float _knockbackForce;
         [SerializeField] private int _health = 5;
@@ -42,7 +44,7 @@ namespace Charakted
             }
             set
             {
-                if (value < _maxHealth)
+                if (value < _MaxHealth)
                 {
                     _health = value;
                 }
@@ -59,7 +61,7 @@ namespace Charakted
 
         public void ReceivedDamage()
         {
-            if (!_isReceivedDamage)
+            if (_isReceivedDamage == false)
             {
                 Health--;
 
@@ -74,16 +76,29 @@ namespace Charakted
         {
             float EndValue = 0;
             float Duration = 0.3f;
+            int Loops = 5;
 
             _spriteRenderer.DOFade(EndValue, Duration)
                 .From()
-                .SetLoops(5, LoopType.Restart)
+                .SetLoops(Loops, LoopType.Restart)
                 .OnComplete(() => _isReceivedDamage = false);
         }
 
         private void RefreshScoreText()
         {
             _scoreText.text = _countCoin.ToString();
+        }
+
+        public void ChangeActiveIfHouse(bool InHouse)
+        {
+            if (InHouse)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                gameObject.SetActive(true);
+            }
         }
     }
 

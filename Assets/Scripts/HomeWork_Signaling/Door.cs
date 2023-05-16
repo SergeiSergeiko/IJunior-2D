@@ -23,7 +23,7 @@ namespace House
         {
             if (_inHouse && Input.GetKey(KeyCode.R))
             {
-                SetActivePlayer(true);
+                _player.ChangeActiveIfHouse(_inHouse);
 
                 _inHouse = false;
                 _reachedHouse.Invoke(_inHouse);
@@ -35,14 +35,8 @@ namespace House
             if (Input.GetKey(KeyCode.E) && collision.TryGetComponent(out Player player))
             {
                 _inHouse = true;
-                SetActivePlayer(false);
                 _reachedHouse.Invoke(_inHouse);
             }
-        }
-
-        private void SetActivePlayer(bool Active)
-        {
-            _player.gameObject.SetActive(Active);
         }
     }
 }
