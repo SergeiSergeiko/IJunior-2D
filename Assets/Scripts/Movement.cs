@@ -1,4 +1,6 @@
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Charakted
 {
@@ -8,7 +10,9 @@ namespace Charakted
         [SerializeField] private Shuriken _shuriken;
         [SerializeField] private float _speed;
         [SerializeField] private float _jumpPower;
-        
+        [SerializeField] private VectorValue _storagePlayerPosition;
+
+        private AudioManagerPlayer _audioManagerPlayer;
         private bool isGrounded = false;
 
         private CharState State
@@ -26,6 +30,12 @@ namespace Charakted
             _rigidbody = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _sprite = GetComponentInChildren<SpriteRenderer>();
+            _audioManagerPlayer = GetComponentInChildren<AudioManagerPlayer>();
+        }
+
+        private void Start()
+        {
+           transform.position = _storagePlayerPosition.InitialValue;
         }
 
         private void FixedUpdate()
@@ -89,6 +99,8 @@ namespace Charakted
         private void Jump()
         {
             _rigidbody.AddForce(transform.up * _jumpPower, ForceMode2D.Impulse);
+
+            _audioManagerPlayer.Jump();
         }
 
         private void Shoot()

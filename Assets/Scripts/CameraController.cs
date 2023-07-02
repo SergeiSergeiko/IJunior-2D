@@ -9,7 +9,6 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private float _speed = 2.0f;
     [SerializeField] private Transform _target;
-    [SerializeField] private SpriteRenderer _sprite;
 
     private void Awake()
     {

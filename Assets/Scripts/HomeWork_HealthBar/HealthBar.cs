@@ -4,11 +4,13 @@ using DG.Tweening;
 
 namespace HomeWork
 {
+    [RequireComponent(typeof(Slider))]
     public class HealthBar : MonoBehaviour
     {
         [SerializeField] private float _speed = 2f;
 
         private Slider _slider;
+        private Tween _tween;
 
         private void Awake()
         {
@@ -17,7 +19,8 @@ namespace HomeWork
 
         public void SetHealth(float Value)
         {
-            _slider.DOValue(Value, _speed);
+            _tween.Kill();
+            _tween = _slider.DOValue(Value, _speed);
         }
     }
 }

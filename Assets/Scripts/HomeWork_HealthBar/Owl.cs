@@ -19,16 +19,8 @@ namespace HomeWork
 
             set
             {
-                _health = value;
-
-                if (_health > _MaxHealth)
-                {
-                    _health = _MaxHealth;
-                }
-                if (_health <= _MinHealth)
-                {
-                    _health = _MinHealth;
-                }                
+                _health = Mathf.Clamp(value, _MinHealth, _MaxHealth);
+                             
                 _healthBar.SetHealth(_health);
             }
         }

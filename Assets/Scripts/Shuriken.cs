@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace Charakted
 {
+    [RequireComponent(typeof(ShurikenSound))]
     public class Shuriken : MonoBehaviour
     {
         [SerializeField] private float _speed = 1.0f;
 
         private Vector3 _direction;
+
         public Vector3 Direction { set { _direction = value; } }
 
         private void Start()

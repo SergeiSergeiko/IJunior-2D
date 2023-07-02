@@ -4,7 +4,6 @@ using UnityEngine;
 namespace House
 {
     [RequireComponent(typeof(AudioSource))]
-
     public class Signaling : MonoBehaviour
     {
         [SerializeField] private float _recoveryRate = 2f;
@@ -58,7 +57,15 @@ namespace House
             {
                 StopCoroutine(_volumeSignal);
             }
-            StartCoroutine(FadeInVolumeSignaling(TargetVolume));
+            _volumeSignal = StartCoroutine(FadeInVolumeSignaling(TargetVolume));
+        }
+
+        private void OnDisable()
+        {
+            if (_volumeSignal != null)
+            {
+                StopCoroutine(_volumeSignal);
+            }
         }
     }
 }

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using static UnityEditor.Experimental.GraphView.GraphView;
 using House;
 
 namespace Charakted
 {
-    [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D))]
+    [RequireComponent(typeof(SpriteRenderer), typeof(Movement))]
     public class Player : MonoBehaviour
     {
         private const int _MaxHealth = 5;
@@ -18,22 +17,24 @@ namespace Charakted
         [SerializeField] private Text _scoreText;
         [SerializeField] private HealthBar _healthBar;
 
+        private AudioManagerPlayer _audioManagerPlayer;
         private Rigidbody2D _rigidbody2D;
         private SpriteRenderer _spriteRenderer;
         private bool _isReceivedDamage = false;
         private int _countCoin;
+        private Tween _fadeSprite;
 
-        public int CountCoin 
-        { 
+        public int CountCoin
+        {
             get
-            { 
+            {
                 return _countCoin;
-            } 
-            set 
-            { 
+            }
+            set
+            {
                 _countCoin++;
                 RefreshScoreText();
-            } 
+            }
         }
 
         public int Health
@@ -52,17 +53,26 @@ namespace Charakted
             }
         }
 
+        private void Awake()
+        {
+            _rigidbody2D = GetComponent<Rigidbody2D>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _audioManagerPlayer = GetComponentInChildren<AudioManagerPlayer>();
+        }
+
         private void Start()
         {
             _countCoin = 0;
-            _rigidbody2D = GetComponent<Rigidbody2D>();
-            _spriteRenderer = GetComponent<SpriteRenderer>();            
         }
 
         public void ReceivedDamage()
         {
             if (_isReceivedDamage == false)
             {
+                _isReceivedDamage = true;
+
+                _audioManagerPlayer.Hit();
+
                 Health--;
 
                 ActivateAnimationReceivedDamage();
@@ -78,7 +88,8 @@ namespace Charakted
             float Duration = 0.3f;
             int Loops = 5;
 
-            _spriteRenderer.DOFade(EndValue, Duration)
+            _fadeSprite.Kill();
+            _fadeSprite = _spriteRenderer.DOFade(EndValue, Duration)
                 .From()
                 .SetLoops(Loops, LoopType.Restart)
                 .OnComplete(() => _isReceivedDamage = false);
@@ -87,18 +98,6 @@ namespace Charakted
         private void RefreshScoreText()
         {
             _scoreText.text = _countCoin.ToString();
-        }
-
-        public void ChangeActiveIfHouse(bool InHouse)
-        {
-            if (InHouse)
-            {
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                gameObject.SetActive(true);
-            }
         }
     }
 
