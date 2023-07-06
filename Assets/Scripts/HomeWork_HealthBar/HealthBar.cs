@@ -7,7 +7,8 @@ namespace HomeWork
     [RequireComponent(typeof(Slider))]
     public class HealthBar : MonoBehaviour
     {
-        [SerializeField] private float _speed = 2f;
+        [SerializeField] private float _speed = .2f;
+        [SerializeField] private Owl _owl;
 
         private Slider _slider;
         private Tween _tween;
@@ -15,6 +16,11 @@ namespace HomeWork
         private void Awake()
         {
             _slider = GetComponent<Slider>();
+        }
+
+        private void Update()
+        {
+            SetHealth(_owl.Health);
         }
 
         public void SetHealth(float Value)
