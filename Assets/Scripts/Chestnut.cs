@@ -6,9 +6,9 @@ namespace Enemies
 {
     public class Chestnut : Enemy
     {
-        private const float _factorForOverlapCircleY = 0.5f;
-        private const float _factorForOverlapCircleX = 0.9f;
-        private const float _radiusForOverlapCircle = 0.1f;
+        private const float FactorForOverlapCircleY = 0.5f;
+        private const float FactorForOverlapCircleX = 0.9f;
+        private const float RadiusForOverlapCircle = 0.1f;
 
         private Vector3 _direction;
         private SpriteRenderer _spriteRenderer;
@@ -29,7 +29,7 @@ namespace Enemies
         {
             if (collision.TryGetComponent(out Shuriken _))
             {
-                Destroy(gameObject);
+                //start animation the die. And he will die
             }
 
             if (collision.TryGetComponent(out Player player))
@@ -41,10 +41,10 @@ namespace Enemies
         private void Move()
         {
 
-            Collider2D[] CollidersFrontOf = Physics2D.OverlapCircleAll(transform.position + transform.up * _factorForOverlapCircleY
-                + transform.right * _direction.x * _factorForOverlapCircleX, _radiusForOverlapCircle);
-            Collider2D[] GroundColliders = Physics2D.OverlapCircleAll(transform.position + transform.up * -_factorForOverlapCircleY
-                + transform.right * _direction.x * _factorForOverlapCircleX, _radiusForOverlapCircle);
+            Collider2D[] CollidersFrontOf = Physics2D.OverlapCircleAll(transform.position + transform.up * FactorForOverlapCircleY
+                + transform.right * _direction.x * FactorForOverlapCircleX, RadiusForOverlapCircle);
+            Collider2D[] GroundColliders = Physics2D.OverlapCircleAll(transform.position + transform.up * -FactorForOverlapCircleY
+                + transform.right * _direction.x * FactorForOverlapCircleX, RadiusForOverlapCircle);
 
             if (CollidersFrontOf.Length > 0 && CollidersFrontOf.All(x => !x.GetComponent<Player>() && !x.GetComponent<Coin>()) 
                || GroundColliders.Length == 0 && GroundColliders.All(x => !x.GetComponent<Player>() && !x.GetComponent<Coin>()))
@@ -54,6 +54,11 @@ namespace Enemies
             }
 
             transform.position = Vector3.MoveTowards(transform.position, transform.position + _direction, _speed * Time.deltaTime);
+        }
+
+        private void Die()
+        {
+            Destroy(gameObject);
         }
     }
 }

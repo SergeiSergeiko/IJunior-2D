@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace HomeWork
 {
@@ -7,6 +8,9 @@ namespace HomeWork
         private const float MaxHealth = 100f;
         private const float MinHealth = 0f;
 
+        [SerializeField] private HealthBar _healthBar;
+
+        private UnityEvent _reportChangeHealthEvent = new();
         private float _health;
 
         public float Health
@@ -16,11 +20,13 @@ namespace HomeWork
             set
             {
                 _health = Mathf.Clamp(value, MinHealth, MaxHealth);
+                _reportChangeHealthEvent.Invoke();
             }
         }
 
         private void Start()
         {
+            _reportChangeHealthEvent.AddListener(_healthBar.HealthUpdate);
             Health = MaxHealth;
         }
     }

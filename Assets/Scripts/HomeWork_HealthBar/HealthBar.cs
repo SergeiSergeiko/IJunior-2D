@@ -18,15 +18,15 @@ namespace HomeWork
             _slider = GetComponent<Slider>();
         }
 
-        private void Update()
-        {
-            SetHealth(_owl.Health);
-        }
-
-        public void SetHealth(float Value)
+        private void SetHealth(float Value)
         {
             _tween.Kill();
             _tween = _slider.DOValue(Value, _speed);
+        }
+
+        public void HealthUpdate()
+        {
+            SetHealth(_owl.Health);
         }
     }
 }
